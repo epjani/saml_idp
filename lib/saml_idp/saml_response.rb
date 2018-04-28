@@ -33,7 +33,7 @@ module SamlIdp
           )
       self.reference_id = reference_id
       self.response_id = response_id
-      self.issuer_uri = issuer_uri
+      self.issuer_uri = 'PassareIdp'
       self.principal = principal
       self.audience_uri = audience_uri
       self.saml_request_id = saml_request_id
@@ -61,7 +61,8 @@ module SamlIdp
     private :signed_assertion
 
     def response_builder
-      ResponseBuilder.new(response_id, issuer_uri, saml_acs_url, saml_request_id, signed_assertion)
+      puts assertion_builder.raw
+      ResponseBuilder.new(response_id, issuer_uri, saml_acs_url, saml_request_id, signed_assertion, algorithm)
     end
     private :response_builder
 

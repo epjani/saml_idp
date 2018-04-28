@@ -34,7 +34,9 @@ module SamlIdp
     end
 
     def validate_saml_request(raw_saml_request = params[:SAMLRequest])
+
       decode_request(raw_saml_request)
+
       return true if valid_saml_request?
       if Rails::VERSION::MAJOR >= 4
         head :forbidden
@@ -130,7 +132,7 @@ module SamlIdp
     end
 
     def default_algorithm
-      OpenSSL::Digest::SHA256
+      OpenSSL::Digest::SHA1
     end
   end
 end

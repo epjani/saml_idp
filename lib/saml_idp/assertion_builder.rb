@@ -42,7 +42,7 @@ module SamlIdp
           assertion.Issuer issuer_uri
           sign assertion
           assertion.Subject do |subject|
-            subject.NameID name_id, Format: name_id_format[:name]
+            subject.NameID 'test', Format: name_id_format[:name]
             subject.SubjectConfirmation Method: Saml::XML::Namespaces::Methods::BEARER do |confirmation|
               confirmation_hash = {}
               confirmation_hash[:InResponseTo] = saml_request_id unless saml_request_id.nil?
@@ -71,17 +71,25 @@ module SamlIdp
           end
           if asserted_attributes
             assertion.AttributeStatement do |attr_statement|
-              asserted_attributes.each do |friendly_name, attrs|
-                attrs = (attrs || {}).with_indifferent_access
-                attr_statement.Attribute Name: attrs[:name] || friendly_name,
-                  NameFormat: attrs[:name_format] || Saml::XML::Namespaces::Formats::Attr::URI,
-                  FriendlyName: friendly_name.to_s do |attr|
-                    values = get_values_for friendly_name, attrs[:getter]
-                    values.each do |val|
-                      attr.AttributeValue val.to_s
-                    end
-                  end
+              attr_statement.Attribute Name: 'UserInfo', NameFormat: Saml::XML::Namespaces::Formats::Attr::URI, FriendlyName: 'UserInfo' do |attribute|
+                attribute.AttributeValue asserted_attributes
               end
+
+              # attr_statement.Attribute Name: 'AccessToken' do |attribute|
+              #   attribute.AttributeValue '$ps%_atbhsr723'
+              # end
+
+              # asserted_attributes.each do |friendly_name, attrs|
+              #   attrs = (attrs || {}).with_indifferent_access
+              #   attr_statement.Attribute Name: attrs[:name] || friendly_name,
+              #     NameFormat: attrs[:name_format] || Saml::XML::Namespaces::Formats::Attr::URI,
+              #     FriendlyName: friendly_name.to_s do |attr|
+              #       values = get_values_for friendly_name, attrs[:getter]
+              #       values.each do |val|
+              #         attr.AttributeValue val.to_s
+              #       end
+              #     end
+              # end
             end
           end
         end
