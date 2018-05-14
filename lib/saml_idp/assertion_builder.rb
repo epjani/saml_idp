@@ -42,7 +42,7 @@ module SamlIdp
           assertion.Issuer issuer_uri
           sign assertion
           assertion.Subject do |subject|
-            subject.NameID 'test', Format: name_id_format[:name]
+            subject.NameID name_id, Format: name_id_format[:name]
             subject.SubjectConfirmation Method: Saml::XML::Namespaces::Methods::BEARER do |confirmation|
               confirmation_hash = {}
               confirmation_hash[:InResponseTo] = saml_request_id unless saml_request_id.nil?
